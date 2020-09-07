@@ -1,19 +1,47 @@
 from Battleship.res.global_variables import *
 from Battleship.lib.pixel import Pixel
+import pygame
 
 
 class Ocean:
-    def __init__(self, screen, start_pos, end_pos, pixel_num):
-        self.height = start_pos[1] - end_pos[1]
-        self.width = start_pos[0] - end_pos[0]
+    def __init__(self, screen, start_pos, end_pos, pixel_num, draw_grid=1):
+        self.height = abs(end_pos[1] - start_pos[1])
+        self.width = abs(end_pos[0] - start_pos[0])
 
+        self.pixel_num = pixel_num
         self.start_pos = start_pos
         self.end_pos = end_pos
         self.screen = screen
+        self.init_ocean()
 
-        self.pixel_num = pixel_num
+        self.rect = pygame.Rect(start_pos, (self.width, self.height))
+        self.default_background_color = colors["DEFAULT_BACKGROUND"]
+        
+        self.draw_g = draw_grid
         self.pixel_width = self.width // pixel_num
         self.pixel_height = self.height // pixel_num
 
-    def draw_grid():
-        grid = [[Pixel()] * pixel_num] * pixel_num
+    def init_ocean(self):
+        self.ocean = [[Pixel()] * self.pixel_num] * self.pixel_num
+
+    def draw_grid(self):
+        color = colors["WHITE"]
+        for i in range(self.pixel_num + 1):
+            # Dinamik yapmalıydım
+            pygame.draw.line(
+                self.screen, color,
+                (self.start_pos[0], self.start_pos[1] + i * self.pixel_width),
+                (self.end_pos[0], self.start_pos[1] + i * self.pixel_width))
+
+            pygame.draw.line(
+                self.screen, color,
+                (self.start_pos[0] + i * self.pixel_width, self.start_pos[1]),
+                (self.start_pos[0] + i * self.pixel_width, self.end_pos[1]))
+
+    def update(self):
+        pygame.draw.rect(self.screen, self.default_background_color, self.rect)
+        # self.screen.fill(colors["DEFAULT_BACKGROUND"])
+        if self.draw_g:
+            self.draw_grid()
+
+        # pygame.display.update()
