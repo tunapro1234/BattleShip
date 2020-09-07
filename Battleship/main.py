@@ -8,6 +8,7 @@ selected_ship = None
 attack_cursor = None
 ready = False
 
+# artık yerleşmiyor ama pixelleri temizlemem gerekiyor
 # gemiler üst üste yerleştirilebiliyor
 
 
@@ -58,9 +59,11 @@ def run_time(screen, my_ocean, enemy_ocean, ships):
                 for index, ship in enumerate(ships):
                     if is_in_area(mouse_pos, ship):
                         selected_ship = index
+                        ships[selected_ship].location = None
                         ships[selected_ship].state = "not suitable"
             else:
                 if ships[selected_ship].state == "suitable":
+                    my_ocean.place(ships[selected_ship])
                     ships[selected_ship].state = "placed"
                     selected_ship = None
 
@@ -80,17 +83,21 @@ def run_time(screen, my_ocean, enemy_ocean, ships):
             # olması gereken konum alınıyor
             (x, y) = my_ocean.get_location(s_ship.pos)
 
-            if but_does_it_fit(s_ship, (x, y), my_ocean):
+            if but_does_it_fit(s_ship, (x, y), ships, my_ocean):
                 # gemi olması gereken konuma yerleştiriliyor
                 ships[selected_ship].move(my_ocean.ocean[x][y].start_pos)
 
                 # gemi rengi yeşile dönüştürülüyor
+                ships[selected_ship].location = (x, y)
                 ships[selected_ship].state = "suitable"
 
+
             else:
+                ships[selected_ship].location = None
                 ships[selected_ship].state = "not suitable"
 
         else:
+            ships[selected_ship].location = None
             ships[selected_ship].state = "not suitable"
 
     screen.fill(colors["WHITE"])
@@ -105,26 +112,42 @@ def run_time(screen, my_ocean, enemy_ocean, ships):
             # eğer gride oturtulmadıysa fareyi takip ediyor
             # yapf: disable
             pos = pygame.mouse.get_pos() if ship.state == "not suitable" else ship.pos
-            ship.draw(pos=pos)
+
+            # bilmiyorum
+            if ship.state != "placed":
+                ship.draw(pos=pos)
 
     pygame.display.update()
     return True
 
 
-def but_does_it_fit(ship, pos, ocean):
+def but_does_it_fit(ship, pos, ships, ocean):
     # isim tuhaf kaçtı biraz
-    if ship.angle == 0:
-        if pos[0] + (ship.length - 1) < ocean.pixel_num:
-            return True
-    elif ship.angle == 1:
-        if pos[1] + (ship.length - 1) < ocean.pixel_num:
-            return True
-    elif ship.angle == 2:
-        if pos[0] - (ship.length - 1) >= 0:
-            return True
-    elif ship.angle == 3:
-        if pos[1] - (ship.length - 1) >= 0:
-            return True
+
+    if ship.angle == 0 and pos[0] + (ship.length - 1) < ocean.pixel_num:
+        for i in range(ship.length):
+            if ocean.ocean[pos[0]+i][pos[1]].state == "ship":
+                return False
+        return True
+
+    elif ship.angle == 1 and pos[1] + (ship.length - 1) < ocean.pixel_num:
+        for i in range(ship.length):
+            if ocean.ocean[pos[0]][pos[1]+i].state == "ship":
+                return False
+        return True
+
+    elif ship.angle == 2 and pos[0] - (ship.length - 1) >= 0:
+        for i in range(ship.length):
+            if ocean.ocean[pos[0]-i][pos[1]].state == "ship":
+                return False
+        return True
+
+    elif ship.angle == 3 and pos[1] - (ship.length - 1) >= 0:
+        for i in range(ship.length):
+            if ocean.ocean[pos[0]][pos[1]-i].state == "ship":
+                return False
+        return True
+
     return bool(0) #UuUUUUUUuuuUUUUuuu
 
 

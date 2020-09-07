@@ -63,3 +63,21 @@ class Ocean:
             self.draw_grid()
 
         # pygame.display.update()
+
+    def place(self, ship):
+        (x, y) = ship.location
+        # self.ocean[x][y].state = "ship"
+        if ship.angle == 0:
+            for i in range(ship.length):
+                self.ocean[x + i][y].state = "ship"
+        elif ship.angle == 1:
+            for i in range(ship.length):
+                self.ocean[x][y + i].state = "ship"
+        elif ship.angle == 2:
+            for i in range(ship.length):
+                self.ocean[x - i][y].state = "ship"
+        elif ship.angle == 3:
+            for i in range(ship.length):
+                self.ocean[x][y - i].state = "ship"
+        else:
+            raise Exception

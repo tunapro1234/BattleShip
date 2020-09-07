@@ -17,6 +17,7 @@ class Ship:
         # calc rect fonksiyonunda belirlenecek
         self.state = "not selected"
         self.start_pos = None
+        self.location = None
         self.end_pos = None
         self.height = None
         self.width = None
