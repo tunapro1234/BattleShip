@@ -13,3 +13,17 @@ colors = {
     "ORANGE": (255, 69, 0),
     "DEFAULT_BACKGROUND": (50, 50, 50)
 }
+
+
+def is_in_area(point, area):
+    if area.start_pos[0] < point[0] < area.end_pos[0]:
+        if area.start_pos[1] < point[1] < area.end_pos[1]:
+            return True
+    return False
+
+
+def is_in(point, area_start_pos, area_end_pos):
+    if area_start_pos[0] < point[0] < area_end_pos[0]:
+        if area_start_pos[1] < point[1] < area_end_pos[1]:
+            return True
+    return False

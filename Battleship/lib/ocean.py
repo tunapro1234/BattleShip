@@ -21,6 +21,10 @@ class Ocean:
         self.pixel_height = self.height // pixel_num
         self.init_ocean()
 
+    def get_location(self, pos):
+        x, y = pos[0] - self.start_pos[0], pos[1] - self.start_pos[1]
+        return x // self.pixel_width, y // self.pixel_height
+
     def init_ocean(self):
         # for döngülü hale getirip pozisyon ve width_height ver
         # self.ocean = [[None] * self.pixel_num] * self.pixel_num

@@ -5,6 +5,9 @@ import time
 
 class Pixel:
     def __init__(self, screen, pos, width_height):
+        self.end_pos = pos[0] + width_height[0], pos[1] + width_height[1]
+        self.start_pos = pos
+
         self.rect = pygame.Rect(pos, width_height)
         self.screen = screen
 
