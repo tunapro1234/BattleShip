@@ -6,6 +6,7 @@ import time
 class Pixel:
     def __init__(self, screen, pos, width_height):
         self.end_pos = pos[0] + width_height[0], pos[1] + width_height[1]
+        self.pixel_width, self.pixel_height = width_height
         self.start_pos = pos
 
         self.rect = pygame.Rect(pos, width_height)
@@ -22,6 +23,8 @@ class Pixel:
             return "hit"
         elif self.color == colors["BLUE"]:
             return "ship"
+        elif self.color == colors["ORANGE"]:
+            return "will attacked"
         # elif self.color == colors["DEFAULT_BACKGROUND"]:
         else:
             return "empty"
@@ -36,6 +39,8 @@ class Pixel:
             self.color = colors["BLUE"]
         elif value == "hit":
             self.color = colors["GREEN"]
+        elif value == "will attacked":
+            self.color = colors["ORANGE"]
         else:
             raise ValueError
 

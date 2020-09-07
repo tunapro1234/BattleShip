@@ -5,15 +5,46 @@ import pygame
 import time
 
 selected_ship = None
+attack_cursor = None
+ready = False
+
+# gemiler üst üste yerleştirilebiliyor
 
 
 def run_time(screen, my_ocean, enemy_ocean, ships):
     global selected_ship
+    global attack_cursor
+    global ready
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return False
 
+        if ready:
+            if attack_cursor is not None:
+                # yapf: disable
+                attack_c = enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]]
+                # yapf: disable
+                if not is_in_area((mouse_pos := pygame.mouse.get_pos()), attack_c):
+                    # yapf: disable
+                    enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]].state = "empty"
+
+            # yapf: disable
+            if is_in_area((mouse_pos := pygame.mouse.get_pos()), enemy_ocean):
+                # yapf: disable
+                attack_cursor = (x, y) = enemy_ocean.get_location(mouse_pos)
+                enemy_ocean.ocean[x][y].state = "will attacked"
+
+            continue
+
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                # yapf: disable
+                if len([i for i in ships if i.state == "placed"]) == len(ships):
+                    ready = True
+                    continue
+
+
             if event.key == pygame.K_ESCAPE:
                 ships[selected_ship].angle = 0
                 ships[selected_ship].state = "not selected"
@@ -95,7 +126,6 @@ def but_does_it_fit(ship, pos, ocean):
         if pos[1] - (ship.length - 1) >= 0:
             return True
     return bool(0) #UuUUUUUUuuuUUUUuuu
-
 
 
 def main():
