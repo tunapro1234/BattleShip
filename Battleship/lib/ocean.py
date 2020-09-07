@@ -12,7 +12,6 @@ class Ocean:
         self.start_pos = start_pos
         self.end_pos = end_pos
         self.screen = screen
-        self.init_ocean()
 
         self.rect = pygame.Rect(start_pos, (self.width, self.height))
         self.default_background_color = colors["DEFAULT_BACKGROUND"]
@@ -20,10 +19,21 @@ class Ocean:
         self.draw_g = draw_grid
         self.pixel_width = self.width // pixel_num
         self.pixel_height = self.height // pixel_num
+        self.init_ocean()
 
     def init_ocean(self):
         # for döngülü hale getirip pozisyon ve width_height ver
-        self.ocean = [[None] * self.pixel_num] * self.pixel_num
+        # self.ocean = [[None] * self.pixel_num] * self.pixel_num
+
+        self.ocean = []
+        for x in range(self.pixel_num):
+            self.ocean.append([])
+            for y in range(self.pixel_num):
+                self.ocean[x].append(
+                    Pixel(self.screen,
+                          (self.start_pos[0] + (x * self.pixel_width),
+                           self.start_pos[1] + (y * self.pixel_height)),
+                          (self.pixel_width, self.pixel_height)))
 
     def draw_grid(self):
         color = colors["WHITE"]
@@ -44,11 +54,11 @@ class Ocean:
             for y in range(self.pixel_num):
                 self.ocean[x][y].draw()
 
-    def update(self):
+    def draw(self):
         pygame.draw.rect(self.screen, self.default_background_color, self.rect)
-        if self.draw_g:
-            self.draw_grid()
 
         self.draw_pixels()
+        if self.draw_g:
+            self.draw_grid()
 
         # pygame.display.update()

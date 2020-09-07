@@ -1,10 +1,11 @@
 from Battleship.res.global_variables import *
 from Battleship.lib.ocean import Ocean
+from Battleship.lib.ship import Ship
 import pygame
 import time
 
 
-def run_time(screen, my_ocean, enemy_ocean):
+def run_time(screen, my_ocean, enemy_ocean, test_ship):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return False
@@ -26,17 +27,20 @@ def run_time(screen, my_ocean, enemy_ocean):
                 pass
 
         if pygame.mouse.get_pressed()[0]:
-            pass
+            if test_ship:
+                test_ship.turn()
 
         elif pygame.mouse.get_pressed()[2]:
             pass
+            # test_ship = Ship(screen, 3, my_ocean.pixel_width,
+            #                  pygame.mouse.get_pos())
 
     screen.fill(colors["WHITE"])
 
-    enemy_ocean.update()
-    my_ocean.update()
+    enemy_ocean.draw()
+    my_ocean.draw()
 
-    # print(pygame.mouse.get_pos())
+    test_ship.draw(pygame.mouse.get_pos(), False)
     pygame.display.update()
 
     return True
@@ -52,12 +56,14 @@ def main():
     # yapf: disable
     my_ocean = Ocean(screen, (100, 80), (400, 380), 10)
     enemy_ocean = Ocean(screen, (600, 80), (900, 380), 10)
-    my_ocean.ocean[1][1].state = "ship"
+
+    test_ship = Ship(screen, 3, my_ocean.pixel_width,
+                    pygame.mouse.get_pos())
 
     while running:
         start_time = time.time()
 
-        running = run_time(screen, my_ocean, enemy_ocean)
+        running = run_time(screen, my_ocean, enemy_ocean, test_ship)
 
         # FPS DÜZENLEMESİ
         while (1 / FPS) > (time.time() - start_time):

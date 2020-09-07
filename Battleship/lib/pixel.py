@@ -26,13 +26,15 @@ class Pixel:
     @state.setter
     def state(self, value):
         if value == "empty":
-            return colors["DEFAULT_BACKGROUND"]
-        elif value == "hit":
-            return colors["GREEN"]
+            self.color = colors["DEFAULT_BACKGROUND"]
         elif value == "attacked":
-            return colors["RED"]
+            self.color = colors["RED"]
+        elif value == "ship":
+            self.color = colors["BLUE"]
+        elif value == "hit":
+            self.color = colors["GREEN"]
         else:
             raise ValueError
 
     def draw(self):
-        pygame.draw.rect(screen, self.color, self.rect)
+        pygame.draw.rect(self.screen, self.color, self.rect)
