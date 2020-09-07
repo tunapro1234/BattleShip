@@ -4,7 +4,7 @@ import pygame
 import time
 
 
-def run_time(screen, ocean, enemy_ocean):
+def run_time(screen, my_ocean, enemy_ocean):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return False
@@ -34,7 +34,7 @@ def run_time(screen, ocean, enemy_ocean):
     screen.fill(colors["WHITE"])
 
     enemy_ocean.update()
-    ocean.update()
+    my_ocean.update()
 
     # print(pygame.mouse.get_pos())
     pygame.display.update()
@@ -50,13 +50,14 @@ def main():
 
     running = bool(1)
     # yapf: disable
-    ocean = Ocean(screen, (100, 80), (400, 380), 10)
+    my_ocean = Ocean(screen, (100, 80), (400, 380), 10)
     enemy_ocean = Ocean(screen, (600, 80), (900, 380), 10)
+    my_ocean.ocean[1][1].state = "ship"
 
     while running:
         start_time = time.time()
 
-        running = run_time(screen, ocean, enemy_ocean)
+        running = run_time(screen, my_ocean, enemy_ocean)
 
         # FPS DÜZENLEMESİ
         while (1 / FPS) > (time.time() - start_time):

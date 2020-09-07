@@ -4,7 +4,10 @@ import time
 
 
 class Pixel:
-    def __init__(self):
+    def __init__(self, screen, pos, width_height):
+        self.rect = pygame.Rect(pos, width_height)
+        self.screen = screen
+
         self.color = None
         self.state = "empty"
 
@@ -15,7 +18,7 @@ class Pixel:
         elif self.color == colors["GREEN"]:
             return "hit"
         elif self.color == colors["BLUE"]:
-            return ship
+            return "ship"
         # elif self.color == colors["DEFAULT_BACKGROUND"]:
         else:
             return "empty"
@@ -30,3 +33,6 @@ class Pixel:
             return colors["RED"]
         else:
             raise ValueError
+
+    def draw(self):
+        pygame.draw.rect(screen, self.color, self.rect)
