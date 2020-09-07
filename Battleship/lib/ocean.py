@@ -64,20 +64,25 @@ class Ocean:
 
         # pygame.display.update()
 
-    def place(self, ship):
+    def change_ocean_state(self, ship, state):
         (x, y) = ship.location
-        # self.ocean[x][y].state = "ship"
         if ship.angle == 0:
             for i in range(ship.length):
-                self.ocean[x + i][y].state = "ship"
+                self.ocean[x + i][y].state = state
         elif ship.angle == 1:
             for i in range(ship.length):
-                self.ocean[x][y + i].state = "ship"
+                self.ocean[x][y + i].state = state
         elif ship.angle == 2:
             for i in range(ship.length):
-                self.ocean[x - i][y].state = "ship"
+                self.ocean[x - i][y].state = state
         elif ship.angle == 3:
             for i in range(ship.length):
-                self.ocean[x][y - i].state = "ship"
+                self.ocean[x][y - i].state = state
         else:
             raise Exception
+
+    def remove(self, ship):
+        self.change_ocean_state(ship, "empty")
+
+    def place(self, ship):
+        self.change_ocean_state(ship, "ship")

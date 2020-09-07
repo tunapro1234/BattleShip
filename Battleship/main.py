@@ -9,7 +9,6 @@ attack_cursor = None
 ready = False
 
 # artık yerleşmiyor ama pixelleri temizlemem gerekiyor
-# gemiler üst üste yerleştirilebiliyor
 
 
 def run_time(screen, my_ocean, enemy_ocean, ships):
@@ -58,6 +57,9 @@ def run_time(screen, my_ocean, enemy_ocean, ships):
             if selected_ship is None:
                 for index, ship in enumerate(ships):
                     if is_in_area(mouse_pos, ship):
+                        if ship.state == "placed":
+                            my_ocean.remove(ship)
+
                         selected_ship = index
                         ships[selected_ship].location = None
                         ships[selected_ship].state = "not suitable"
