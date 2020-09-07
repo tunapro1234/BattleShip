@@ -8,9 +8,6 @@ selected_ship = None
 attack_cursor = None
 ready = False
 
-# artık yerleşmiyor ama pixelleri temizlemem gerekiyor
-
-
 def run_time(screen, my_ocean, enemy_ocean, ships):
     global selected_ship
     global attack_cursor
