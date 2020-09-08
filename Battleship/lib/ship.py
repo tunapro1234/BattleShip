@@ -26,6 +26,7 @@ class Ship:
 
     @property
     def state(self):
+        # kullanılmıyor
         if self.color == colors["BLUE"]:
             return "placed"
         elif self.color == colors["TURQ"]:

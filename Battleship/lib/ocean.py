@@ -64,6 +64,15 @@ class Ocean:
 
         # pygame.display.update()
 
+    def take_hit(self, incoming_hit):
+        ap = self.ocean[incoming_hit[0]][incoming_hit[1]]
+        if ap.state == "ship":
+            self.ocean[incoming_hit[0]][incoming_hit[1]].state = "hit"
+        elif ap.state == "empty":
+            self.ocean[incoming_hit[0]][incoming_hit[1]].state = "attacked"
+        else:
+            raise Exception("Bunu okuyorsan aslında bunu okuma")
+
     def change_ocean_state(self, ship, state):
         (x, y) = ship.location
         if ship.angle == 0:

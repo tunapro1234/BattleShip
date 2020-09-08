@@ -2,7 +2,7 @@ grid_ = 1
 grid_color = "WHITE"
 x_offset = 60
 y_offset = 60
-b_width = 400
+b_width = 200
 pixel_num = 10
 
 ship_lens = sorted([2, 2, 2, 3, 3, 4, 4])
@@ -17,7 +17,7 @@ if pixel_num > len(ship_lens):
 else:
     print("[ FAIL ] b_width must be bigger")
     # exit()
-    HEIGHT = len(ship_lens)*2*(b_width // pixel_num) + y_offset*2
+    HEIGHT = len(ship_lens)*(b_width // pixel_num) + (len(ship_lens)-1)*5 + y_offset*2
 
 CAPTION = "BATTLESHIP"
 P_WIDTH = 20

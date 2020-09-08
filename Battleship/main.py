@@ -45,8 +45,11 @@ def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
                     attack_cursor = (x, y)
 
             if pygame.mouse.get_pressed()[0] and attack_cursor is not None:
-                enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]].state = "hit" if is_hit(attack_cursor) else "attacked"
+                did_hit, incoming_hit = is_hit(attack_cursor)
+                enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]].state = "hit" if did_hit else "attacked"
                 attack_cursor = None
+
+                my_ocean.take_hit(incoming_hit)
 
             continue
 
@@ -194,8 +197,8 @@ def main():
         raise Exception("Size Error (width)")
 
     # height yetiyor mu
-    if len(ship_lens) >= pixel_num:
-        raise Exception("Size Error (height)")
+    # if len(ship_lens) >= pixel_num:
+    #     raise Exception("Size Error (height)")
 
     # yapf: disable
     my_ocean = Ocean(screen, (x_offset*2+x_area, y_offset), (b_width+x_offset*2+x_area, b_width+y_offset), pixel_num, draw_grid=grid_)

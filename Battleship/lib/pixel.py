@@ -17,13 +17,13 @@ class Pixel:
 
     @property
     def state(self):
-        if self.color == colors["RED"]:
+        if self.color == colors["WHITE"]:
             return "attacked"
-        elif self.color == colors["GREEN"]:
-            return "hit"
-        elif self.color == colors["BLUE"]:
-            return "ship"
         elif self.color == colors["ORANGE"]:
+            return "hit"
+        elif self.color == colors["TURQ"]:
+            return "ship"
+        elif self.color == colors["RED"]:
             return "will attacked"
         # elif self.color == colors["DEFAULT_BACKGROUND"]:
         else:
@@ -34,13 +34,13 @@ class Pixel:
         if value == "empty":
             self.color = colors["DEFAULT_BACKGROUND"]
         elif value == "attacked":
-            self.color = colors["RED"]
+            self.color = colors["WHITE"]
         elif value == "ship":
-            self.color = colors["BLUE"]
+            self.color = colors["TURQ"]
         elif value == "hit":
-            self.color = colors["GREEN"]
-        elif value == "will attacked":
             self.color = colors["ORANGE"]
+        elif value == "will attacked":
+            self.color = colors["RED"]
         else:
             raise ValueError
 
