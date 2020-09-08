@@ -3,13 +3,17 @@ from Battleship.lib.ocean import Ocean
 from Battleship.lib.ship import Ship
 import pygame
 import time
+"""
+GUI düzenlemesi lazım gemilerin etrafına çizgi gibi
+gemiler ilk konumlarında yan yana yerleşebilseler çok hoş olur
 
+"""
 selected_ship = None
 attack_cursor = None
 ready = False
 
 
-def run_time(screen, my_ocean, enemy_ocean, ships):
+def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
     global selected_ship
     global attack_cursor
     global ready
@@ -104,6 +108,7 @@ def run_time(screen, my_ocean, enemy_ocean, ships):
 
     enemy_ocean.draw()
     my_ocean.draw()
+    pygame.draw.rect(screen, colors["DEFAULT_BACKGROUND"], x_rect)
 
     for index, ship in enumerate(ships):
         if index != selected_ship:
@@ -158,11 +163,6 @@ def main():
     # screen.fill(colors["DEFAULT_BACKGROUND"])
 
     running = bool(1)
-    # yapf: disable
-
-    my_ocean = Ocean(screen, (x_offset, y_offset), (b_width+x_offset, b_width+y_offset), pixel_num, draw_grid=grid_)
-    enemy_ocean = Ocean(screen, ((WIDTH-x_offset)-b_width, y_offset), (WIDTH-x_offset, b_width+y_offset), pixel_num, draw_grid=grid_)
-
 
     ships = []
     # ship_lens = sorted(ship_lens)
@@ -171,12 +171,21 @@ def main():
     # ayarlamıştım ama yine de silmeye kıyamadım
 
     # width yetiyor mu
-    if (ship_lens[-1])*my_ocean.pixel_width > WIDTH - (x_offset*2+b_width)*2:
+    if (ship_lens[-1])*(b_width//pixel_num) > (x_area := WIDTH - (x_offset*2+b_width)*2):
         raise Exception("Size Error (width)")
 
     # height yetiyor mu
     if len(ship_lens) >= pixel_num:
         raise Exception("Size Error (height)")
+
+    # yapf: disable
+    my_ocean = Ocean(screen, (x_offset*2+x_area, y_offset), (b_width+x_offset*2+x_area, b_width+y_offset), pixel_num, draw_grid=grid_)
+    enemy_ocean = Ocean(screen, ((WIDTH-x_offset)-b_width, y_offset), (WIDTH-x_offset, b_width+y_offset), pixel_num, draw_grid=grid_)
+
+    ### ŞŞŞ BURAYA
+
+    x_rect = pygame.Rect((0, 0), (x_area, HEIGHT))
+    # pygame.draw.rect(screen, colors["DEFAULT_BACKGROUND"], x_rect)
 
     # gemilerin arasında olması gereken mesafe
     ship_y_gap = ((HEIGHT - y_offset*2) - len(ship_lens)*my_ocean.pixel_width) // (len(ship_lens)-1)
@@ -186,7 +195,7 @@ def main():
         # uzunluğunun yarısını aldığın şeyden çıkarıp genişliğin yarısını ekliyon
 
         # genişliğin yarısını ekleme sebebin benim mouse için geliştirdiğim boş şey
-        ship_pos = ((WIDTH//2)-((ship_len/2)*my_ocean.pixel_width)+my_ocean.pixel_width//2,
+        ship_pos = ((x_area//2)-((ship_len/2)*my_ocean.pixel_width)+my_ocean.pixel_width//2 + (x_offset//2),
                     index*(my_ocean.pixel_width + ship_y_gap) + y_offset + my_ocean.pixel_width//2)
 
         ships.append(Ship(screen, ship_len, my_ocean.pixel_width, ship_pos))
@@ -197,7 +206,7 @@ def main():
     while running:
         start_time = time.time()
 
-        running = run_time(screen, my_ocean, enemy_ocean, ships)
+        running = run_time(screen, my_ocean, enemy_ocean, ships, x_rect)
         # print(pygame.mouse.get_pos())
 
         # FPS DÜZENLEMESİ
