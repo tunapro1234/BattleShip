@@ -1,4 +1,5 @@
 grid_ = 1
+grid_color = "WHITE"
 x_offset = 60
 y_offset = 60
 b_width = 400
@@ -32,6 +33,7 @@ colors = {
     "ORANGE": (255, 69, 0),
     "DEFAULT_BACKGROUND": (50, 50, 50)
 }
+grid_color = colors[grid_color]
 
 
 def is_in_area(point, area):
