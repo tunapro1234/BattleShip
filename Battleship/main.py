@@ -104,11 +104,14 @@ def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
             ships[selected_ship].location = None
             ships[selected_ship].state = "not suitable"
 
-    screen.fill(colors["WHITE"])
-
+    if ready:
+        screen.fill(colors["GREEN"])
+    else:
+        screen.fill(colors["RED"])
+    
     enemy_ocean.draw()
     my_ocean.draw()
-    pygame.draw.rect(screen, colors["DEFAULT_BACKGROUND"], x_rect)
+    pygame.draw.rect(screen, colors["BLACK"], x_rect)
 
     for index, ship in enumerate(ships):
         if index != selected_ship:
@@ -184,7 +187,7 @@ def main():
 
     ### ŞŞŞ BURAYA
 
-    x_rect = pygame.Rect((0, 0), (x_area, HEIGHT))
+    x_rect = pygame.Rect((0, 0), (x_area+x_offset, HEIGHT))
     # pygame.draw.rect(screen, colors["DEFAULT_BACKGROUND"], x_rect)
 
     # gemilerin arasında olması gereken mesafe

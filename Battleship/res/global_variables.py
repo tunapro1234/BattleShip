@@ -1,4 +1,4 @@
-grid_ = 0
+grid_ = 1
 x_offset = 60
 y_offset = 60
 b_width = 400
