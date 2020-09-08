@@ -4,7 +4,7 @@ import pygame
 
 
 class Ocean:
-    def __init__(self, screen, start_pos, end_pos, pixel_num, draw_grid=0):
+    def __init__(self, screen, start_pos, end_pos, pixel_num, draw_grid=1):
         self.height = abs(end_pos[1] - start_pos[1])
         self.width = abs(end_pos[0] - start_pos[0])
 

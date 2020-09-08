@@ -1,4 +1,23 @@
-WIDTH, HEIGHT = (1000, 600)
+grid_ = 0
+x_offset = 60
+y_offset = 60
+b_width = 400
+pixel_num = 10
+
+ship_lens = sorted([2, 2, 2, 3, 3, 4, 4])
+
+if b_width % pixel_num != 0:
+    raise Exception("genişlik ve pixel sayısı uyumlu değil")
+
+# yapf: disable
+WIDTH = (x_offset * 2 + b_width) * 2 + ship_lens[-1] * (b_width // pixel_num)
+if pixel_num > len(ship_lens):
+    HEIGHT = y_offset * 2 + b_width
+else:
+    print("[ FAIL ] b_width must be bigger")
+    # exit()
+    HEIGHT = len(ship_lens)*2*(b_width // pixel_num) + y_offset*2
+
 CAPTION = "BATTLESHIP"
 P_WIDTH = 20
 FPS = 120
