@@ -56,7 +56,7 @@ def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 # yapf: disable
-                if len([i for i in ships if i.state == "placed"]) == len(ships):
+                if len([i for i in ships if i.state == "placed"]) == len(ships) or DEBUG_MODE:
                     ready = "started"
                     continue
 

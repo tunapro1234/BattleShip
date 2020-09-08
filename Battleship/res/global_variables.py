@@ -1,3 +1,5 @@
+DEBUG_MODE = 1
+
 grid_ = 1
 grid_color = "WHITE"
 x_offset = 60
