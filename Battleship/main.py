@@ -1,3 +1,4 @@
+from Battleship.test.enemy_ai1 import is_hit
 from Battleship.res.global_variables import *
 from Battleship.lib.ocean import Ocean
 from Battleship.lib.ship import Ship
@@ -22,20 +23,30 @@ def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
         if event.type == pygame.QUIT:
             return False
 
-        if ready:
+        if ready == "started":
+            # attack cursor varsa değişti mi diye kotrol et yoksa olup olmadığını kontrol et
             if attack_cursor is not None:
                 # yapf: disable
                 attack_c = enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]]
+                # karmaşık görünmesin diye
                 # yapf: disable
                 if not is_in_area((mouse_pos := pygame.mouse.get_pos()), attack_c):
                     # yapf: disable
                     enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]].state = "empty"
+                    # eğer mouse alanın içinden çıktıysa baştan hesapla
+                    attack_cursor = None
 
             # yapf: disable
             if is_in_area((mouse_pos := pygame.mouse.get_pos()), enemy_ocean):
                 # yapf: disable
-                attack_cursor = (x, y) = enemy_ocean.get_location(mouse_pos)
-                enemy_ocean.ocean[x][y].state = "will attacked"
+                (x, y) = enemy_ocean.get_location(mouse_pos)
+                if enemy_ocean.ocean[x][y].state == "empty":
+                    enemy_ocean.ocean[x][y].state = "will attacked"
+                    attack_cursor = (x, y)
+
+            if pygame.mouse.get_pressed()[0] and attack_cursor is not None:
+                enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]].state = "hit" if is_hit(attack_cursor) else "attacked"
+                attack_cursor = None
 
             continue
 
@@ -43,7 +54,7 @@ def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
             if event.key == pygame.K_SPACE:
                 # yapf: disable
                 if len([i for i in ships if i.state == "placed"]) == len(ships):
-                    ready = True
+                    ready = "started"
                     continue
 
 
@@ -54,6 +65,7 @@ def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
 
                 selected_ship = None
 
+        # sol klik
         if pygame.mouse.get_pressed()[0]:
             mouse_pos = pygame.mouse.get_pos()
             if selected_ship is None:
@@ -65,6 +77,7 @@ def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
                         selected_ship = index
                         ships[selected_ship].location = None
                         ships[selected_ship].state = "not suitable"
+            # sağ klik
             else:
                 if ships[selected_ship].state == "suitable":
                     my_ocean.place(ships[selected_ship])
@@ -104,11 +117,17 @@ def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
             ships[selected_ship].location = None
             ships[selected_ship].state = "not suitable"
 
-    screen.fill(colors["WHITE"])
+    if ready == "waiting":
+        screen.fill(colors["GREEN"])
+    if ready == "started":
+        screen.fill(colors["WHITE"])
+    else:
+        screen.fill(colors["RED"])
 
     enemy_ocean.draw()
     my_ocean.draw()
-    pygame.draw.rect(screen, colors["DEFAULT_BACKGROUND"], x_rect)
+    pygame.draw.rect(screen, colors["BLACK"], x_rect)
+    pygame.draw.rect(screen, colors["WHITE"], x_rect, 1)
 
     for index, ship in enumerate(ships):
         if index != selected_ship:
@@ -184,7 +203,7 @@ def main():
 
     ### ŞŞŞ BURAYA
 
-    x_rect = pygame.Rect((0, 0), (x_area, HEIGHT))
+    x_rect = pygame.Rect((0, 0), (x_area+x_offset, HEIGHT))
     # pygame.draw.rect(screen, colors["DEFAULT_BACKGROUND"], x_rect)
 
     # gemilerin arasında olması gereken mesafe

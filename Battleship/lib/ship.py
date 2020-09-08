@@ -28,7 +28,7 @@ class Ship:
     def state(self):
         if self.color == colors["BLUE"]:
             return "placed"
-        elif self.color == colors["BLACK"]:
+        elif self.color == colors["TURQ"]:
             return "not selected"
         elif self.color == colors["GREEN"]:
             return "suitable"
@@ -40,7 +40,7 @@ class Ship:
         if value == "placed":
             self.color = colors["BLUE"]
         elif value == "not selected":
-            self.color = colors["BLACK"]
+            self.color = colors["TURQ"]
         elif value == "suitable":
             self.color = colors["GREEN"]
         elif value == "not suitable":

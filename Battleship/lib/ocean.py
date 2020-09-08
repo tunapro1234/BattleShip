@@ -37,7 +37,7 @@ class Ocean:
                           (self.pixel_width, self.pixel_height)))
 
     def draw_grid(self):
-        color = colors["WHITE"]
+        color = grid_color
         for i in range(self.pixel_num + 1):
             # Dinamik yapmalıydım
             pygame.draw.line(
