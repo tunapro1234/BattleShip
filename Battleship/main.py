@@ -5,13 +5,16 @@ from Battleship.lib.ship import Ship
 import pygame
 import time
 """
+end game 
 GUI düzenlemesi lazım gemilerin etrafına çizgi gibi
 gemiler ilk konumlarında yan yana yerleşebilseler çok hoş olur
+enemy_ai branch
+socket branch
 
 """
 selected_ship = None
 attack_cursor = None
-ready = False
+ready = None
 
 
 def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
@@ -46,86 +49,97 @@ def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
 
             if pygame.mouse.get_pressed()[0] and attack_cursor is not None:
                 did_hit_, incoming_hit = did_hit(attack_cursor)
-                enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]].state = "hit" if did_hit_ else "attacked"
+                # enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]].state = "hit" if did_hit_ else "attacked"
+
+                # eğer gemi kalmadıysa True döndürüyor
+                if enemy_ocean.take_hit(attack_cursor, did_hit_):
+                    ready = "won"
+
+                elif my_ocean.take_hit(incoming_hit):
+                    ready = "lost"
+
                 attack_cursor = None
 
-                my_ocean.take_hit(incoming_hit)
-
-            continue
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                # yapf: disable
-                if len([i for i in ships if i.state == "placed"]) == len(ships) or DEBUG_MODE:
-                    ready = "started"
-                    continue
-
-
-            if event.key == pygame.K_ESCAPE:
-                ships[selected_ship].angle = 0
-                ships[selected_ship].state = "not selected"
-                ships[selected_ship].go(ships[selected_ship].default_pos)
-
-                selected_ship = None
-
-        # sol klik
-        if pygame.mouse.get_pressed()[0]:
-            mouse_pos = pygame.mouse.get_pos()
-            if selected_ship is None:
-                for index, ship in enumerate(ships):
-                    if is_in_area(mouse_pos, ship):
-                        if ship.state == "placed":
-                            my_ocean.remove(ship)
-
-                        selected_ship = index
-                        ships[selected_ship].location = None
-                        ships[selected_ship].state = "not suitable"
-            # sağ klik
-            else:
-                if ships[selected_ship].state == "suitable":
-                    my_ocean.place(ships[selected_ship])
-                    ships[selected_ship].state = "placed"
-                    selected_ship = None
-
-        elif pygame.mouse.get_pressed()[2]:
-            ships[selected_ship].turn()
-
-    if selected_ship is not None:
-        s_ship = ships[selected_ship]
-
-        # eğer fare kafanın içinden çıkarsa
-        if not is_in((mouse_pos := pygame.mouse.get_pos()), s_ship.start_pos,
-                     [(i + s_ship.pixel_width) for i in s_ship.start_pos]):
-            # fareyi takip et
-            ships[selected_ship].go(mouse_pos)
-
-        if is_in_area(s_ship.pos, my_ocean):
-            # olması gereken konum alınıyor
-            (x, y) = my_ocean.get_location(s_ship.pos)
-
-            if but_does_it_fit(s_ship, (x, y), ships, my_ocean):
-                # gemi olması gereken konuma yerleştiriliyor
-                ships[selected_ship].move(my_ocean.ocean[x][y].start_pos)
-
-                # gemi rengi yeşile dönüştürülüyor
-                ships[selected_ship].location = (x, y)
-                ships[selected_ship].state = "suitable"
-
-
-            else:
-                ships[selected_ship].location = None
-                ships[selected_ship].state = "not suitable"
+        elif ready in ["lost", "won"]:
+            pass
 
         else:
-            ships[selected_ship].location = None
-            ships[selected_ship].state = "not suitable"
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    # yapf: disable
+                    if len([i for i in ships if i.state == "placed"]) == len(ships) or DEBUG_MODE:
+                        ready = "started"
+                        continue
+
+
+                if event.key == pygame.K_ESCAPE:
+                    ships[selected_ship].angle = 0
+                    ships[selected_ship].state = "not selected"
+                    ships[selected_ship].go(ships[selected_ship].default_pos)
+
+                    selected_ship = None
+
+            # sol klik
+            if pygame.mouse.get_pressed()[0]:
+                mouse_pos = pygame.mouse.get_pos()
+                if selected_ship is None:
+                    for index, ship in enumerate(ships):
+                        if is_in_area(mouse_pos, ship):
+                            if ship.state == "placed":
+                                my_ocean.remove(ship)
+
+                            selected_ship = index
+                            ships[selected_ship].location = None
+                            ships[selected_ship].state = "not suitable"
+                # sağ klik
+                else:
+                    if ships[selected_ship].state == "suitable":
+                        my_ocean.place(ships[selected_ship])
+                        ships[selected_ship].state = "placed"
+                        selected_ship = None
+
+            elif pygame.mouse.get_pressed()[2]:
+                ships[selected_ship].turn()
+
+            if selected_ship is not None:
+                s_ship = ships[selected_ship]
+
+                # eğer fare kafanın içinden çıkarsa
+                if not is_in((mouse_pos := pygame.mouse.get_pos()), s_ship.start_pos,
+                            [(i + s_ship.pixel_width) for i in s_ship.start_pos]):
+                    # fareyi takip et
+                    ships[selected_ship].go(mouse_pos)
+
+                if is_in_area(s_ship.pos, my_ocean):
+                    # olması gereken konum alınıyor
+                    (x, y) = my_ocean.get_location(s_ship.pos)
+
+                    if but_does_it_fit(s_ship, (x, y), ships, my_ocean):
+                        # gemi olması gereken konuma yerleştiriliyor
+                        ships[selected_ship].move(my_ocean.ocean[x][y].start_pos)
+
+                        # gemi rengi yeşile dönüştürülüyor
+                        ships[selected_ship].location = (x, y)
+                        ships[selected_ship].state = "suitable"
+
+                    else:
+                        ships[selected_ship].location = None
+                        ships[selected_ship].state = "not suitable"
+
+                else:
+                    ships[selected_ship].location = None
+                    ships[selected_ship].state = "not suitable"
 
     if ready == "waiting":
+        screen.fill(colors["ORANGE"])
+    elif ready == "lost":
+        screen.fill(colors["RED"])
+    elif ready == "won":
         screen.fill(colors["GREEN"])
-    if ready == "started":
+    elif ready == "started":
         screen.fill(colors["WHITE"])
     else:
-        screen.fill(colors["RED"])
+        screen.fill(colors["BLUE"])
 
     enemy_ocean.draw()
     my_ocean.draw()
@@ -201,8 +215,8 @@ def main():
     #     raise Exception("Size Error (height)")
 
     # yapf: disable
-    my_ocean = Ocean(screen, (x_offset*2+x_area, y_offset), (b_width+x_offset*2+x_area, b_width+y_offset), pixel_num, draw_grid=grid_)
-    enemy_ocean = Ocean(screen, ((WIDTH-x_offset)-b_width, y_offset), (WIDTH-x_offset, b_width+y_offset), pixel_num, draw_grid=grid_)
+    my_ocean = Ocean(screen, (x_offset*2+x_area, y_offset), (b_width+x_offset*2+x_area, b_width+y_offset), pixel_num, total_ship, draw_grid=grid_)
+    enemy_ocean = Ocean(screen, ((WIDTH-x_offset)-b_width, y_offset), (WIDTH-x_offset, b_width+y_offset), pixel_num, total_ship , draw_grid=grid_)
 
     ### ŞŞŞ BURAYA
 

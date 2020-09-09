@@ -1,4 +1,4 @@
-DEBUG_MODE = 1
+DEBUG_MODE = 0
 
 grid_ = 1
 grid_color = "WHITE"
@@ -7,7 +7,11 @@ y_offset = 60
 b_width = 200
 pixel_num = 10
 
-ship_lens = sorted([2, 2, 2, 3, 3, 4, 4])
+multiplier = (pixel_num // 10) if (pixel_num // 10) != 0 else 1
+
+# yapf: disable
+ship_lens = sorted([2, 2, 2, 3, 3, 4, 4] * multiplier)  # okyanustaki her 100 blok için bir liste daha
+total_ship = sum(ship_lens)
 
 if b_width % pixel_num != 0:
     raise Exception("genişlik ve pixel sayısı uyumlu değil")

@@ -4,14 +4,19 @@ import pygame
 
 
 class Ocean:
-    def __init__(self, screen, start_pos, end_pos, pixel_num, draw_grid=1):
+    # yapf: disable
+    def __init__(self, screen, start_pos, end_pos, pixel_num, total_ship, draw_grid=1):
         self.height = abs(end_pos[1] - start_pos[1])
         self.width = abs(end_pos[0] - start_pos[0])
+
+        self.left_ship = total_ship
+        # self.hit_ship = 0
 
         self.pixel_num = pixel_num
         self.start_pos = start_pos
         self.end_pos = end_pos
         self.screen = screen
+        # self.enemy = enemy
 
         self.rect = pygame.Rect(start_pos, (self.width, self.height))
         self.default_background_color = colors["DEFAULT_BACKGROUND"]
@@ -64,14 +69,27 @@ class Ocean:
 
         # pygame.display.update()
 
-    def take_hit(self, incoming_hit):
-        ap = self.ocean[incoming_hit[0]][incoming_hit[1]]
-        if ap.state == "ship":
-            self.ocean[incoming_hit[0]][incoming_hit[1]].state = "hit"
-        elif ap.state == "empty":
-            self.ocean[incoming_hit[0]][incoming_hit[1]].state = "attacked"
+    def take_hit(self, incoming_hit, did_hit_ = None):
+        rv = False
+        if did_hit_ is None:
+            ap = self.ocean[incoming_hit[0]][incoming_hit[1]]
+            if ap.state == "ship":
+                self.total_ship -= 1
+                if self.total_ship <= 0:
+                    rv = True
+                self.ocean[incoming_hit[0]][incoming_hit[1]].state = "hit"
+
+            elif ap.state == "empty":
+                self.ocean[incoming_hit[0]][incoming_hit[1]].state = "attacked"
+            else:
+                raise Exception("Bunu okuyorsan aslında bunu okuma")
         else:
-            raise Exception("Bunu okuyorsan aslında bunu okuma")
+            if (sv := "hit" if did_hit_ else "attacked") == "hit":
+                self.total_ship -= 1
+                if self.total_ship <= 0:
+                    rv = True
+            self.ocean[incoming_hit[0]][incoming_hit[1]].state = sv
+        return rv
 
     def change_ocean_state(self, ship, state):
         (x, y) = ship.location
