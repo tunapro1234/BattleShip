@@ -1,0 +1,4 @@
+ADDR = (SERVER, PORT) = ("127.0.0.1", "65534")
+DISCONNECT = ";END;"
+FORMAT = "utf-8"
+HEADER = 16
