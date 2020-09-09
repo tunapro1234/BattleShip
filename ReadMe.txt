@@ -1,0 +1,1 @@
+Zaten yalnızım neden ayrı branch kullanıyorum ki
