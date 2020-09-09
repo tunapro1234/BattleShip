@@ -1,6 +1,6 @@
 {
+    "python.pythonPath": "C:\\Users\\Cem G\\AppData\\Local\\Programs\\Python\\Python38-32\\python.exe",
     "editor.cursorStyle": "block-outline",
     "editor.cursorBlinking": "phase",
-    "editor.cursorSmoothCaretAnimation": true,
-    "python.pythonPath": "C:\\ProgramData\\Anaconda3\\python.exe"
+    "editor.cursorSmoothCaretAnimation": true
 }
