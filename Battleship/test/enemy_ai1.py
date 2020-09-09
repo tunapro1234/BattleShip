@@ -18,7 +18,7 @@ for x in range(pixel_num):
         enemy_grid[-1].append((x, y))
 
 
-def hitter():
+def hitler():
     global enemy_grid
     random.seed(time.time())
 
@@ -26,7 +26,7 @@ def hitter():
     if len(enemy_grid[rx]) == 0:
         # patlaması zorlaşsın diye
         time.sleep(0.01)
-        return hitter()
+        return hitler()
     elif len(enemy_grid[rx]) == 1:
         ry = 0
     else:
@@ -37,9 +37,9 @@ def hitter():
     return rv
 
 
-def is_hit(location):
+def did_hit(location):
     # print("".join([str(i) + "\n" for i in grid]))
     # print(location)
 
     rv = True if grid[location[0]][location[1]] else False
-    return rv, hitter()
+    return rv, hitler()

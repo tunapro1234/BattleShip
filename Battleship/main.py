@@ -1,4 +1,4 @@
-from Battleship.test.enemy_ai1 import is_hit
+from Battleship.test.enemy_ai1 import did_hit
 from Battleship.res.global_variables import *
 from Battleship.lib.ocean import Ocean
 from Battleship.lib.ship import Ship
@@ -45,8 +45,8 @@ def run_time(screen, my_ocean, enemy_ocean, ships, x_rect):
                     attack_cursor = (x, y)
 
             if pygame.mouse.get_pressed()[0] and attack_cursor is not None:
-                did_hit, incoming_hit = is_hit(attack_cursor)
-                enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]].state = "hit" if did_hit else "attacked"
+                did_hit_, incoming_hit = did_hit(attack_cursor)
+                enemy_ocean.ocean[attack_cursor[0]][attack_cursor[1]].state = "hit" if did_hit_ else "attacked"
                 attack_cursor = None
 
                 my_ocean.take_hit(incoming_hit)

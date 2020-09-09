@@ -105,5 +105,6 @@ class Ship:
 
     def turn(self, value=1):
         self.angle += value
-        self.angle = self.angle % 4  # en fazla 4e kadar
+        # self.angle = self.angle % 4  # en fazla 4e kadar
+        self.angle = self.angle % 2  # gereksiz keşke daha önce fark etseydim
         self.calc_rect()
