@@ -1,11 +1,23 @@
 import threading
 import socket
 import time
+import json
 
+class Server:
+    def __init__(self, address):
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.ADDR = address
+
+    def connect(address = None):
+        address = self.ADDR if address is None else address
+        self.server.connect(address)
+
+    def handle(self):
+        
 
 def main():
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(ADDR)
+    server = Server(ADDR)
+    server.connect()
 
 
 def send(msg):
